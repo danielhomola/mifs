@@ -13,7 +13,7 @@ import bottleneck as bn
 import mi
 
 
-class MutualInformationFeautreSelector(object):
+class MutualInformationFeatureSelector(object):
     """
     MI_FS stands for Mutual Information based Feature Selection.
     This class contains routines for selecting features using both
