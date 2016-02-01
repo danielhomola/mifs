@@ -68,7 +68,7 @@ __mi___ : array of shape n_features
 
 ### Examples ###
 
-    import pandas
+    import pandas as pd
     import mifs
 
     # load X and y

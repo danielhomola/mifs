@@ -76,7 +76,7 @@ class MutualInformationFeatureSelector(object):
     Examples
     --------
 
-    import pandas
+    import pandas as pd
     import mifs
 
     # load X and y
