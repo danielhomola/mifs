@@ -44,7 +44,7 @@ if __name__ == '__main__':
                          n_redundant=r, n_clusters_per_class=c, 
                          random_state=0, shuffle=False)
     # perform feature selection
-    MIFS = mifs.MutualInformationFeautreSelector(method='JMI', verbose=2)
+    MIFS = mifs.MutualInformationFeatureSelector(method='JMI', verbose=2)
     MIFS.fit(X,y)
     # calculate precision and sensitivity
     sens, prec = check_selection(np.where(MIFS.support_)[0], i, r)
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     X, y = make_regression(n_samples=s, n_features=f, n_informative=i, 
                          random_state=0, shuffle=False)                     
     # perform feature selection
-    MIFS = mifs.MutualInformationFeautreSelector(method='JMI', verbose=2, 
+    MIFS = mifs.MutualInformationFeatureSelector(method='JMI', verbose=2, 
                                                   categorical = False)
     MIFS.fit(X,y)
     # calculate precision and sensitivity

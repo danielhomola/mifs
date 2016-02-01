@@ -84,7 +84,7 @@ class MutualInformationFeatureSelector(object):
     y = pd.read_csv('my_y_vector.csv', index_col=0).values
 
     # define MI_FS feature selection method
-    feat_selector = mifs.MutualInformationFeautreSelector()
+    feat_selector = mifs.MutualInformationFeatureSelector()
 
     # find all relevant features
     feat_selector.fit(X, y)
