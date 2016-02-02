@@ -2,6 +2,8 @@
 
 Parallelized Mutual Information based Feature Selection module.
 
+[Related blog post] (http://danielhomola.com/2016/01/31/mifs-parallelized-mutual-information-based-feature-selection-module/)
+
 ## Dependencies ##
 
 * numpy
