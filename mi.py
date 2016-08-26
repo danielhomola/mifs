@@ -54,7 +54,7 @@ def get_first_mi_vector(MI_FS, k):
     This function is for when |S| = 0. We select the first feautre in S.
     """
     n, p = MI_FS.X.shape
-    MIs = Parallel(n_jobs=num_cores)(delayed(_get_first_mi)(i, k, MI_FS) for i in xrange(p))
+    MIs = Parallel(n_jobs=num_cores)(delayed(_get_first_mi)(i, k, MI_FS) for i in range(p))
     return MIs
 
 
