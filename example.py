@@ -48,7 +48,7 @@ if __name__ == '__main__':
     MIFS.fit(X,y)
     # calculate precision and sensitivity
     sens, prec = check_selection(np.where(MIFS.support_)[0], i, r)
-    print 'Sensitivity: ' + str(sens) + '    Precision: ' + str(prec)
+    print('Sensitivity: ' + str(sens) + '    Precision: ' + str(prec))
     
     
     # simulate dataset with continuous y 
@@ -60,4 +60,4 @@ if __name__ == '__main__':
     MIFS.fit(X,y)
     # calculate precision and sensitivity
     sens, prec = check_selection(np.where(MIFS.support_)[0], i, r)
-    print 'Sensitivity: ' + str(sens) + '    Precision: ' + str(prec)
+    print('Sensitivity: ' + str(sens) + '    Precision: ' + str(prec))
