@@ -203,7 +203,7 @@ class MutualInformationFeatureSelector(object):
         k_max = 11
         xy_MI = np.zeros((k_max-k_min, p))
         xy_MI[:] = np.nan
-        for i, k in enumerate(list(range(k_min, k_max))):
+        for i, k in enumerate(range(k_min, k_max)):
             xy_MI [i, :] = mi.get_first_mi_vector(self, k)
         xy_MI = bn.nanmedian(xy_MI, axis=0)
 
