@@ -1,0 +1,4 @@
+scipy>=0.17.0
+numpy>=1.10.4
+scikit-learn>=0.17.1
+bottleneck>=1.0.0
