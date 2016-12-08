@@ -9,8 +9,12 @@ import numpy as np
 from scipy import signal
 from sklearn.utils import check_X_y
 from sklearn.preprocessing import StandardScaler
+from sklearn.externals.joblib.parallel import cpu_count
 import bottleneck as bn
-import mi
+from . import mi
+
+
+NUM_CORES = cpu_count()
 
 
 class MutualInformationFeatureSelector(object):
@@ -33,7 +37,7 @@ class MutualInformationFeatureSelector(object):
         - 'MRMR' : Max-Relevance Min-Redundancy [3]
 
     k : int, default = 5
-        Sets the number of samples to use for the kernel density estimation 
+        Sets the number of samples to use for the kernel density estimation
         with the kNN method. Kraskov et al. recommend a small integer between
         3 and 10.
 
@@ -46,6 +50,9 @@ class MutualInformationFeatureSelector(object):
         If True, y is assumed to be a categorical class label. If False, y is
         treated as a continuous. Consequently this parameter determines the
         method of estimation of the MI between the predictors in X and y.
+
+    n_jobs : int, optional (default=1)
+        The number of threads to open if possible.
 
     verbose : int, default=0
         Controls verbosity of output:
@@ -66,12 +73,12 @@ class MutualInformationFeatureSelector(object):
         The feature ranking of the selected features, with the first being
         the first feature selected with largest marginal MI with y, followed by
         the others with decreasing MI.
-    
+
     mi_ : array of shape n_features
         The JMIM of the selected features. Usually this a monotone decreasing
-        array of numbers converging to 0. One can use this to estimate the 
-        number of features to select. In fact this is what n_features='auto'
-        tries to do heuristically. 
+        array of numbers converging to 0. One can use this to estimate the
+        number of features to select. In fact this is what n_features='auto''
+        tries to do heuristically.
 
     Examples
     --------
@@ -114,11 +121,12 @@ class MutualInformationFeatureSelector(object):
     """
 
     def __init__(self, method='JMI', k=5, n_features='auto', categorical=True,
-                 verbose=0):
+                 n_jobs=1, verbose=0):
         self.method = method
         self.k = k
         self.n_features = n_features
         self.categorical = categorical
+        self.n_jobs = n_jobs
         self.verbose = verbose
 
     def fit(self, X, y):
@@ -133,6 +141,10 @@ class MutualInformationFeatureSelector(object):
         y : array-like, shape = [n_samples]
             The target values.
         """
+
+        # Check if n_jobs is negative
+        if self.n_jobs < 0:
+            self.n_jobs = NUM_CORES - self.n_jobs
 
         return self._fit(X, y)
 
@@ -194,9 +206,9 @@ class MutualInformationFeatureSelector(object):
         feature_mi_matrix[:] = np.nan
         S_mi = []
 
-        # ----------------------------------------------------------------------
+        # ---------------------------------------------------------------------
         # FIND FIRST FEATURE
-        # ----------------------------------------------------------------------
+        # ---------------------------------------------------------------------
 
         # check a range of ks (3-10), and choose the one with the max median MI
         k_min = 3
@@ -204,7 +216,7 @@ class MutualInformationFeatureSelector(object):
         xy_MI = np.zeros((k_max-k_min, p))
         xy_MI[:] = np.nan
         for i, k in enumerate(range(k_min, k_max)):
-            xy_MI [i, :] = mi.get_first_mi_vector(self, k)
+            xy_MI[i, :] = mi.get_first_mi_vector(self, k)
         xy_MI = bn.nanmedian(xy_MI, axis=0)
 
         # choose the best, add it to S, remove it from F
@@ -215,9 +227,9 @@ class MutualInformationFeatureSelector(object):
         if self.verbose > 0:
             self._print_results(S, S_mi)
 
-        # ----------------------------------------------------------------------
+        # ---------------------------------------------------------------------
         # FIND SUBSEQUENT FEATURES
-        # ----------------------------------------------------------------------
+        # ---------------------------------------------------------------------
 
         while len(S) < self.n_features:
             # loop through the remaining unselected features and calculate MI
@@ -225,7 +237,7 @@ class MutualInformationFeatureSelector(object):
             feature_mi_matrix[s, F] = mi.get_mi_vector(self, F, s)
 
             # make decision based on the chosen FS algorithm
-            fmm = feature_mi_matrix[:len(S),F]
+            fmm = feature_mi_matrix[:len(S), F]
             if self.method == 'JMI':
                 selected = F[bn.nanargmax(bn.nansum(fmm, axis=0))]
             elif self.method == 'JMIM':
@@ -245,15 +257,15 @@ class MutualInformationFeatureSelector(object):
             # if n_features == 'auto', let's check the S_mi to stop
             if self.n_features == 'auto' and len(S) > 10:
                 # smooth the 1st derivative of the MI values of previously sel
-                MI_dd = signal.savgol_filter(S_mi[1:],9,2,1)
+                MI_dd = signal.savgol_filter(S_mi[1:], 9, 2, 1)
                 # does the mean of the last 5 converge to 0?
                 if np.abs(np.mean(MI_dd[-5:])) < 1e-3:
                     break
 
-        # ----------------------------------------------------------------------
+        # ---------------------------------------------------------------------
         # SAVE RESULTS
-        # ----------------------------------------------------------------------
-        
+        # ---------------------------------------------------------------------
+
         self.n_features_ = len(S)
         self.support_ = np.zeros(p, dtype=np.bool)
         self.support_[S] = 1
@@ -277,7 +289,7 @@ class MutualInformationFeatureSelector(object):
     def _check_params(self, X, y):
         # checking input data and scaling it if y is continuous
         X, y = check_X_y(X, y)
-        
+
         if not self.categorical:
             ss = StandardScaler()
             X = ss.fit_transform(X)
@@ -311,7 +323,7 @@ class MutualInformationFeatureSelector(object):
         """
         Helper function: removes ith element from F and adds it to S.
         """
-        
+
         S.append(i)
         F.remove(i)
         return S, F
