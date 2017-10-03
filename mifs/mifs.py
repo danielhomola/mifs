@@ -231,7 +231,7 @@ class MutualInformationFeatureSelector(object):
         # FIND SUBSEQUENT FEATURES
         # ---------------------------------------------------------------------
 
-        while len(S) < self.n_features:
+        while len(S) < self.n_features if not isinstance(self.n_features, str) else True:
             # loop through the remaining unselected features and calculate MI
             s = len(S) - 1
             feature_mi_matrix[s, F] = mi.get_mi_vector(self, F, s)
