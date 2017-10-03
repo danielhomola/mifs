@@ -197,7 +197,7 @@ class MutualInformationFeatureSelector(object):
         # list of selected features
         S = []
         # list of all features
-        F = range(p)
+        F = [v for v in range(p)]
 
         if self.n_features != 'auto':
             feature_mi_matrix = np.zeros((self.n_features, p))
@@ -231,7 +231,7 @@ class MutualInformationFeatureSelector(object):
         # FIND SUBSEQUENT FEATURES
         # ---------------------------------------------------------------------
 
-        while len(S) < self.n_features:
+        while len(S) < self.n_features if not isinstance(self.n_features, str) else True:
             # loop through the remaining unselected features and calculate MI
             s = len(S) - 1
             feature_mi_matrix[s, F] = mi.get_mi_vector(self, F, s)
@@ -311,11 +311,11 @@ class MutualInformationFeatureSelector(object):
         if not isinstance(self.categorical, bool):
             raise ValueError('Categorical must be Boolean.')
         if self.categorical and np.unique(y).shape[0] > 5:
-            print 'Are you sure y is categorical? It has more than 5 levels.'
+            print('Are you sure y is categorical? It has more than 5 levels.')
         if not self.categorical and self._isinteger(y):
-            print 'Are you sure y is continuous? It seems to be discrete.'
+            print('Are you sure y is continuous? It seems to be discrete.')
         if self._isinteger(X):
-            print ('The values of X seem to be discrete. MI_FS will treat them'
+            print('The values of X seem to be discrete. MI_FS will treat them'
                    'as continuous.')
         return X, y
 
@@ -338,4 +338,4 @@ class MutualInformationFeatureSelector(object):
 
         if self.verbose > 1:
             out += ', JMIM: ' + str(MIs[-1])
-        print out
+        print(out)
