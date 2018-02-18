@@ -53,7 +53,7 @@ def get_first_mi_vector(MI_FS, k):
     """
     n, p = MI_FS.X.shape
     MIs = Parallel(n_jobs=MI_FS.n_jobs)(delayed(_get_first_mi)(i, k, MI_FS)
-                                        for i in xrange(p))
+                                        for i in range(p))
     return MIs
 
 
