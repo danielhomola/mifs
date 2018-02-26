@@ -343,5 +343,5 @@ class MutualInformationFeatureSelector(object):
                     str(self.n_features) + ' : ' + str(S[-1]))
 
         if self.verbose > 1:
-            out += ', JMIM: ' + str(MIs[-1])
+            out += ', ' + self.method + ' : ' + str(MIs[-1])
         print (out)
