@@ -210,14 +210,7 @@ class MutualInformationFeatureSelector(object):
         # FIND FIRST FEATURE
         # ---------------------------------------------------------------------
 
-        # check a range of ks (3-10), and choose the one with the max median MI
-        k_min = 3
-        k_max = 11
-        xy_MI = np.zeros((k_max-k_min, p))
-        xy_MI[:] = np.nan
-        for i, k in enumerate(range(k_min, k_max)):
-            xy_MI[i, :] = mi.get_first_mi_vector(self, k)
-        xy_MI = bn.nanmedian(xy_MI, axis=0)
+        xy_MI = mi.get_first_mi_vector(self, self.k)
 
         # choose the best, add it to S, remove it from F
         S, F = self._add_remove(S, F, bn.nanargmax(xy_MI))
@@ -251,9 +244,11 @@ class MutualInformationFeatureSelector(object):
                     break
                 MRMR = xy_MI[F] - bn.nanmean(fmm, axis=0)
                 selected = F[bn.nanargmax(MRMR)]
+                S_mi.append(bn.nanmax(MRMR))
 
             # record the JMIM of the newly selected feature and add it to S
-            S_mi.append(bn.nanmax(bn.nanmin(fmm, axis=0)))
+            if self.method != 'MRMR':
+                S_mi.append(bn.nanmax(bn.nanmin(fmm, axis=0)))
             S, F = self._add_remove(S, F, selected)
 
             # notify user
