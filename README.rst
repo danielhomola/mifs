@@ -105,7 +105,7 @@ The following example illustrates the use of the package::
     feat_selector.fit(X, y)
 
     # check selected features
-    feat_selector.support_
+    feat_selector._support_mask
 
     # check ranking of features
     feat_selector.ranking_
