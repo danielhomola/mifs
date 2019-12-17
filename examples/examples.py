@@ -47,7 +47,7 @@ if __name__ == '__main__':
     MIFS = mifs.MutualInformationFeatureSelector(method='JMI', verbose=2)
     MIFS.fit(X,y)
     # calculate precision and sensitivity
-    sens, prec = check_selection(np.where(MIFS.support_)[0], i, r)
+    sens, prec = check_selection(np.where(MIFS._support_mask)[0], i, r)
     print 'Sensitivity: ' + str(sens) + '    Precision: ' + str(prec)
     
     
@@ -59,5 +59,5 @@ if __name__ == '__main__':
                                                   categorical = False)
     MIFS.fit(X,y)
     # calculate precision and sensitivity
-    sens, prec = check_selection(np.where(MIFS.support_)[0], i, r)
+    sens, prec = check_selection(np.where(MIFS._support_mask)[0], i, r)
     print 'Sensitivity: ' + str(sens) + '    Precision: ' + str(prec)
