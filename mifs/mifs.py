@@ -9,7 +9,7 @@ import numpy as np
 from scipy import signal
 from sklearn.utils import check_X_y
 from sklearn.preprocessing import StandardScaler
-from sklearn.externals.joblib.parallel import cpu_count
+from multiprocessing import cpu_count
 from sklearn.base import BaseEstimator
 from sklearn.feature_selection.base import SelectorMixin
 import bottleneck as bn
