@@ -7,7 +7,7 @@ Parallelized Mutual Information based Feature Selection module.
 
 Related blog post here_
 
-.. _here: http://danielhomola.com/2016/01/31/mifs-parallelized-mutual-information-based-feature-selection-module
+.. _here: https://danielhomola.com/feature%20selection/phd/mifs-parallelized-mutual-information-based-feature-selection-module/
 
 Dependencies
 ------------
