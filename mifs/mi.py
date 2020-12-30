@@ -8,7 +8,7 @@ License: BSD 3 clause
 import numpy as np
 from scipy.special import gamma, psi
 from sklearn.neighbors import NearestNeighbors
-from sklearn.externals.joblib import Parallel, delayed
+from joblib import Parallel, delayed
 
 def get_mi_vector(MI_FS, F, s):
     """
